@@ -1,0 +1,90 @@
+Day 1 Answer
+
+Exercise 02:
+Configure D1 as DHCP server for VLAN 100
+- DHCP Pool name: SERVERPOOL
+ - Network: 192.168.1.128 255.255.255.224
+ - Default Gateway: 192.168.1.129
+ - DNS: 192.168.1.129
+ - Domain: SERVER.COM
+
+!@D1
+conf t
+ ip dhcp pool SERVERPOOL
+ network 192.168.1.128 255.255.255.224
+ default-router 192.168.1.129
+ dns-server 192.168.1.129
+ domain-name SERVER.COM
+ end
+
+!@D1
+conf t
+ interface e1/0
+  switchport mode access
+  switchport access vlan 100
+  end
+
+--
+
+!@S1
+conf t
+ interface e1/0
+  no shutdown
+  ip add dhcp
+  end
+
+----------------------------------------------------
+
+
+Exercise 03:
+Configure D2 as DHCP server for VLAN 20
+- DHCP Pool name: DNSPOOL
+ - Network: 10.2.2.0 255.255.255.0
+ - Default Gateway: 10.2.2.2
+ - DNS: 10.2.2.2
+ - Domain: DNS.COM
+
+--
+
+!@D2
+conf t
+ ip dhcp pool DNSPOOL
+ network 10.2.2.0 255.255.255.0
+ default-router 192.168.1.129
+ dns-server 10.2.2.2
+ domain-name DNS.COM
+ end
+
+!@D2
+conf t
+ interface e1/0
+  switchport mode access
+  switchport access vlan 20
+  end
+
+--
+
+!@S2
+conf t
+ interface e1/0
+  no shutdown
+  ip add dhcp
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
