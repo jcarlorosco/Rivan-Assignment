@@ -1,0 +1,314 @@
+!@R4
+conf t
+ int e3/3
+  no shut
+  ip add dhcp
+  ip ospf 1 area 0
+  exit
+ router eigrp 100
+  network 208.8.8.0 0.0.0.255
+  end
+
+
+
+
+********
+
+!@D1
+conf t
+ int e3/3 
+  no sw
+  no shut
+  ip add dhcp
+  exit
+ monitor session 1 source int e1/0
+ monitor session 1 destination int e3/3
+ end
+
+!@D1
+conf t
+ int e1/0
+  no switchport
+  ip add 69.69.69.2 255.255.255.0
+  no shut
+  exit
+ router bgp 12
+  neighbor 69.69.69.1 remote-as 12
+  network 69.69.69.0 mask 255.255.255.0
+  end
+ 
+!@I2 - PLDT
+show bgp summary
+
+
+
+!@R1
+conf t
+ ip nat inside source static 10.2.1.101 207.7.7.201
+ ip nat inside source static 10.2.1.102 208.8.8.202
+ ip nat inside source static 10.2.2.133 209.9.9.203
+  end
+
+
+
+*************
+
+STATIC 1
+EIGRP 90
+OSPF 110
+EBGP 20
+  IBGP 200
+ISIS 115
+RIP 120
+
+
+Find the network:
+
+10.1.4.10/30
+
+1st step is Rivan Format
+/30 = (4th, 4i)
+
+10.1.4.x /30
+      .0
+      .4
+10.1.4.8 /30  = Ang network ni 10.1.4.10
+      .12
+
+
+VLAN 100
+192.168.1.130 /27
+
+1. Convert Rivanformat
+   /27 = (4th , 32i)
+
+2. Mag bilang
+
+192.168.1.x /27
+         .0
+         .32
+         .64
+         .96
+192.168.1.128/27  = ang network
+         .160
+
+3. VLAN 10 = 10.2.1.2/24
+(3rd 1i)
+
+10.2.1.x /24
+    .0.0
+10.2.1.0 = Network
+    .2.0
+
+
+
+OSPF
+
+Reference Bandwidth  = 100mb
+/
+Int BW = 10000kb
+
+
+D - Down
+I - Init
+T - Twoway
+E - Exstart
+E - Echange
+L - Loading
+F - Full
+
+
+10.10.8.0/22
+
+!@R2
+conf t
+ router ospf 1
+  area 12 range 10.10.0.0 255.255.240.0
+  end
+
+
+!@R2
+conf t
+ int lo7
+  ip add 10.10.7.1 255.255.255.255
+  ip ospf 1 area 12
+  end
+
+
+10.10.7.0
+10.10.8.0
+10.10.9.0
+10.10.10.0
+10.10.11.0
+
+1. 3RD
+2. 11 - 7 = 4
+3. 16i
+
+10.10.0.0 /20   (3rd, 16i)
+10.10.16.0
+     .16.1
+     .31.254
+10.10.32.0
+10.10.48.0
+
+
+
+
+
+
+10.10.33.0
+10.10.50.0
+10.10.60.0
+
+32i
+10.10.0.0
+10.10.32.0
+10.10.64.0
+
+
+
+
+
+
+
+
+
+
+10.10.33.1
+10.10.33.129
+10.10.34.1
+10.10.34.129
+
+1. 3rd
+2. 34- 33 = 1 = 2i  4i
+
+10.10.32.0 /22   4i 3rd
+10.10.36.0
+10.10.40.0
+
+!@R2
+conf t
+ router ospf 1
+  area 12 range 10.10.32.0 255.255.252.0
+  end
+
+!@R1
+show ip route ospf
+
+
+
+!@S1
+conf t
+ int e1/0
+  no shut
+  ip add 69.69.69.1 255.255.255.0
+  exit
+ router bgp 11
+  neighbor 69.69.69.2 remote-as 12
+  network 69.69.69.0 mask 255.255.255.0
+  end
+
+
+**************
+
+
+
+IPv4
+/27  (4th, 32i)
+
+IPv6
+/65  (5th Hextet, 1st Hexadecimal, 8i)
+/126 (8th, 4th , 4i)
+/78  (5th,  4th, 4i)
+
+
+
+Configure 10 offices using 2001:db8::/78
+Convert: 10 = 2r  4 bits
+Add: /78 + 4 = /82 (6th, 1st Hexadecimal, 4i)
+
+1st Office : 2001:0db8:0000:0000:0000:0000:0000:0000 /82
+2nd Office :                         :4000:
+3rd Office :                         :8000:
+             2001:db8::8000:0:0/82
+4th Office :                         :C000:
+
+Using the 3rd Office/Subnet 
+Assign the IPv6 GUA IP on R4's e0/0
+Assign the IPv6 GUA on I4/GOOGLE-DNS' e0/0
+
+Network:  2001:db8::8000:0:0/82
+
+!@R4, I4-Google
+conf t
+ ipv6 unicast-routing
+ int e0/0
+  no shut
+  ipv6 add 2001:db8::8000:0:0/82  eui-64
+  end
+show ipv6 int brief
+bp6
+
+DHCPv6
+int = ipv6 autoconfig
+
+
+
+Configure 32 offices using 2001::/20
+Convert: 32 = 5 bits
+Add: /20 + 5 = /25  (2nd Hextet, 3rd Hexa, 8i)
+
+1st Office: 2001:0000:0000:0000:0000:0000:0000:0000 /25
+2nd Office:     :0080:
+3rd Office:     :0100:
+            2001:100::/25
+
+Network: 2001:100::/25
+First Valid (+1 Net): 2001:100::1 /25
+Last Valid (-1 Any): 
+2001:0100:0000:0001:FFFF:FFFF:FFFF:FF7F/64 - <
+Anycast (Last 128 IP add):  2001:0100:0000:0001:FFFF:FFFF:FFFF:FF80/64
+                                     |
+2001:0100:0000:0001:FFFF:FFFF:FFFF:FFFF/64
+
+Not Network: 2001:180::/25
+
+
+Using the 2nd office
+assign the first valid ipv6 address on R3's e0/0 
+assign the last valid ipv6 address on I3's e0/0 
+   NOTE: Make sure no reserved IPv6 anycast address is used
+
+
+
+
+Configure 12 offices using 2001::/90
+Convert: 12 = 4
+Add: /90 + 4 = /94  (6Hextet, 4 Hexa, 4i)
+
+1st: 2001:0000:0000:0000:0000:0000:0000:0000:/94
+2nd: 2001:0000:0000:0000:0000:0004:0000:0000:/94
+Find the 3rd Office:
+     2001:0000:0000:0000:0000:0008:0000:0000:/94
+     
+Network: 2001::8:0:0/94
+ First Valid: 2001::8:0:1/94
+ Last Valid: :FF7F
+ Anycast: :FF80:  - :FFFF:
+
+Next Network: 2001::C:0:0/94
+
+
+
+12 = 4bits
+/90 + 4 = /94 (6th, 4th, 4i)
+
+2001:0000:0000:0000:0000:0000:0000:0000:
+
+2001:0000:0000:0000:0000:0004:0000:0000:
+2001:0000:0000:0000:0000:0008:0000:0000:/94
+
+
+
+
