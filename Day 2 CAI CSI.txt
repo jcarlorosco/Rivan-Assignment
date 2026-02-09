@@ -1,0 +1,4 @@
+When to use CAI and CSI
+
+CSI - Convert Subtract Ipasok - Clue: Host, deve, users, Pcs, Routers
+CAI - Convert Add Ipasok - Clue: Subnets, Office, Sites, Maximize
