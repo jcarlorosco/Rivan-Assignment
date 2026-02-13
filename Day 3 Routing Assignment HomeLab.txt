@@ -43,27 +43,28 @@ sh ip int br (Show IP interface brief)
 conf t
  int e0/0
   switchport mode access
-  switch port access vlan 10
+  switchport access vlan 10
+end
 
 !@A2
 conf t
  int e1/0
   switchport mode access
-  switch port access vlan 10
+  switchport access vlan 10
 end
 
 !@D1
 conf t
  int e1/0
   switchport mode access
-  switch port access vlan 100
+  switchport access vlan 100
 end
 
 !@D2
 conf t
  int e1/0
-  switch port mode access
-  switch port access vlan 20
+  switchport mode access
+  switchport access vlan 20
 end
 
 !@check if  they can ping each other
@@ -199,12 +200,57 @@ show ip ospf neighbor
 clear ip ospf process
 
 ===========================================================================
-
 6. Point-to-point, Priority
 
+!@R1
+conf t
+ router bgp 1
+  bgp log-neighbor-changes
+  neighbor 209.9.9.3 remote-as 3
+  neighbor 207.7.7.2 remote-as 2
+  neighbor 208.8.8.4 remote-as 45
+  address-family ipv4
+   neighbor 209.9.9.3 activate
+   neighbor 207.7.7.2 activate
+   neighbor 208.8.8.4 activate
+   network 209.9.9.0 mask 255.255.255.0
+   network 207.7.7.0 mask 255.255.255.0
+   network 208.8.8.0 mask 255.255.255.0
+end
+
+!@I2
+conf t
+ router bgp 2
+  bgp log-neighbor-changes
+  neighbor 32.3.2.3 remote-as 3
+  neighbor 25.2.5.5 remote-as 45
+  neighbor 24.2.4.4 remote-as 45
+  neighbor 207.7.7.1 remote-as 1
+  address-family ipv4
+   neighbor 32.3.2.3 activate
+   neighbor 25.2.5.5 activate
+   neighbor 24.2.4.4 activate
+   neighbor 207.7.7.1 activate
+   network 22.22.22.22 mask 255.255.255.255
+   network 32.3.2.0 mask 255.255.255.0
+   network 25.2.5.0 mask 255.255.255.0
+   network 24.2.4.0 mask 255.255.255.0
+   network 207.7.7.0 mask 255.255.255.0
+end
+
+
+===========================================================================
 7. BGP
 
+
+
+
+===========================================================================
 8. Redistribute Routes
 
+
+
+===========================================================================
 9. NAT
+
 
