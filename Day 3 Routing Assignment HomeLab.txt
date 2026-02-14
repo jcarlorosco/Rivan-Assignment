@@ -304,11 +304,67 @@ end
 8. Redistribute Routes
 
 !@R4
+config t
+ router ospf 1
+ redistribute eigrp 100 subnets
+ exit
+router eigrp 100
+ redistribute ospf 1 metric 10000 100 255 1 1500
+end
 
-
+!@R1
+conf t
+ router ospf 1
+  default-information originate always
+end
 
 ===========================================================================
 9. NAT
 
+Static NAT (Any ISP from topology)
 
+P1 = 209.9.9.10
+P2 = 209.9.9.20
+S1 = 207.7.7.10
+S2 = 208.8.8.10
+
+!@R1
+conf t
+ int range e1/1-3
+  ip nat outside
+ int e1/0
+  ip nat inside
+!
+access-list 1 permit 10.0.0.0 0.255.255.255
+access-list 1 permit 172.16.0.0 0.15.255.255
+access-list 1 permit 192.168.0.0 0.0.255.255
+!
+ip nat inside source static 10.2.1.101 209.9.9.10
+ip nat inside source static 10.2.1.102 209.9.9.20
+ip nat inside source static 192.168.1.133 207.7.7.10
+ip nat inside source static 10.2.2.133 208.8.8.10
+!
+ip nat inside source list 1 int e1/2 overload
+end
+
+!@checking
+!@R1
+show ip nat translations
+
+
+!@P1 check hops (Results below)
+traceroute 8.8.8.8
+
+P1#traceroute 8.8.8.8
+Type escape sequence to abort.
+Tracing the route to dns.google.com (8.8.8.8)
+VRF info: (vrf in name/id, vrf out name/id)
+  1 core1v10.rivanit.com (10.2.1.1) 1 msec 25 msec 2 msec
+  2  * 
+    edge10-R4e10.rivanit.com (10.1.4.5) 3 msec 2 msec
+  3 fortinet-R3e12.rivanit.com (10.1.1.9) 1 msec 1 msec 1 msec
+  4 paloalto-R2e11.rivanit.com (10.1.1.5) 1 msec 1 msec 0 msec
+  5 ciscofirepower-R1e10.bgp.rivanit.com (10.1.1.1) 2 msec 2 msec 1 msec
+  6 core208e13.isp1convergeict.com (208.8.8.4) 9 msec 3 msec 4 msec
+  7 core45e01.google.com (45.4.5.5) 3 msec *  3 msec
 
