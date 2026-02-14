@@ -359,12 +359,14 @@ P1#traceroute 8.8.8.8
 Type escape sequence to abort.
 Tracing the route to dns.google.com (8.8.8.8)
 VRF info: (vrf in name/id, vrf out name/id)
-  1 core1v10.rivanit.com (10.2.1.1) 1 msec 25 msec 2 msec
-  2  * 
-    edge10-R4e10.rivanit.com (10.1.4.5) 3 msec 2 msec
-  3 fortinet-R3e12.rivanit.com (10.1.1.9) 1 msec 1 msec 1 msec
-  4 paloalto-R2e11.rivanit.com (10.1.1.5) 1 msec 1 msec 0 msec
-  5 ciscofirepower-R1e10.bgp.rivanit.com (10.1.1.1) 2 msec 2 msec 1 msec
-  6 core208e13.isp1convergeict.com (208.8.8.4) 9 msec 3 msec 4 msec
-  7 core45e01.google.com (45.4.5.5) 3 msec *  3 msec
+  1 core1v10.rivanit.com (10.2.1.1) 2 msec 1 msec 0 msec
+  2 edge10-R4e10.rivanit.com (10.1.4.5) 1 msec 1 msec 1 msec
+  3 fortinet-R3e12.rivanit.com (10.1.1.9) 2 msec 1 msec 2 msec
+  4 paloalto-R2e11.rivanit.com (10.1.1.5) 2 msec 2 msec 1 msec
+  5 ciscofirepower-R1e10.bgp.rivanit.com (10.1.1.1) 2 msec 2 msec 3 msec
+  6 core208e13.isp1convergeict.com (208.8.8.4) 3 msec 3 msec 3 msec
+  7 core45e01.google.com (45.4.5.5) 3 msec *  5 msec
+
+Day 3 assignment - 02/14/2026
+
 
