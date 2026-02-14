@@ -202,6 +202,12 @@ clear ip ospf process
 ===========================================================================
 6. Point-to-point, Priority
 
+
+
+
+===========================================================================
+7. BGP
+
 !@R1
 conf t
  router bgp 1
@@ -239,18 +245,70 @@ conf t
 end
 
 
-===========================================================================
-7. BGP
+!@I3
+conf t
+ router bgp 3
+ bgp log-neighbor-changes
+ neighbor 209.9.9.1 remote-as 1
+ neighbor 32.3.2.2 remote-as 2
+ neighbor 35.3.5.5 remote-as 45
+ address-family ipv4
+   neighbor 209.9.9.1 activate
+   neighbor 32.3.2.2 activate
+   neighbor 35.3.5.5 activate
+   network 33.33.33.33 mask 255.255.255.255
+   network 209.9.9.0 mask 255.255.255.0
+   network 32.3.2.0 mask 255.255.255.0
+   network 35.3.5.0 mask 255.255.255.0
+end
 
 
+@!I1
+conf t
+ router bgp 45
+ bgp log-neighbor-changes
+ neighbor 208.8.8.1 remote-as 1
+ neighbor 24.2.4.2 remote-as 2
+ neighbor 45.4.5.5 remote-as 45
+ address-family ipv4
+  neighbor 208.8.8.1 activate
+  neighbor 24.2.4.2 activate
+  neighbor 45.4.5.5 activate
+  network  44.44.44.44 mask 255.255.255.255
+  network 208.8.8.0 mask 255.255.255.0
+  network 24.2.4.0 mask 255.255.255.0
+  network 45.4.5.0 mask 255.255.255.0
+end
+
+
+!@Google DNS
+conf t
+ router bgp 45
+ bgp log-neighbor-changes
+ neighbor 35.3.5.3 remote-as 3
+ neighbor 25.2.5.2 remote-as 2
+ neighbor 45.4.5.4 remote-as 45
+ address-family ipv4
+  neighbor 35.3.5.3 activate
+  neighbor 25.2.5.2 activate
+  neighbor 45.4.5.4 activate
+  network 55.55.55.55 mask 255.255.255.255
+  network 8.8.8.8 mask 255.255.255.255
+  network 35.3.5.0 mask 255.255.255.0
+  network 25.2.5.0 mask 255.255.255.0
+  network 45.4.5.0 mask 255.255.255.0
+end
 
 
 ===========================================================================
 8. Redistribute Routes
 
+!@R4
+
 
 
 ===========================================================================
 9. NAT
+
 
 
